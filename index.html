@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Heatmap Traffico → Inquinamento</title>
+  
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="./style.css?v=1">
+  <link rel="stylesheet" href="./panel.css?v=1">
+</head>
+
+<body>
+  <div class="app">
+    <aside class="panel" id="panel-host"></aside>
+
+    <main class="map">
+      <div id="map"></div>
+      <div class="legend">
+        <div><strong>Legenda</strong></div>
+        <div class="footer">Più chiaro = più intensità (indice emissioni)</div>
+      </div>
+    </main>
+  </div>
+
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+    defer
+  ></script>
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js" defer></script>
+  
+  <script type="module">
+    import { loadPanelInto } from './js/panel-loader.js';
+    loadPanelInto('#panel-host', './panel.html?v=20251001').catch(console.error);
+  </script>
+
+</body>
+</html>

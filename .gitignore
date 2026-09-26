@@ -1,0 +1,9 @@
+/logs/
+/Tesi/*.aux
+/Tesi/*.fdb_latexmk
+/Tesi/*.fls
+/Tesi/*.log
+/Tesi/*.out
+/Tesi/*.synctex.gz
+/Tesi/*.toc
+/Tesi/main.pdf

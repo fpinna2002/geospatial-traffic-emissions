@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PollutantView</title>
+</head>
+<body>
+
+  <!-- Header titolo -->
+  <div class="panel-title">
+    <h1>PollutantView</h1>
+  </div>
+
+  <!-- Toggle apri/chiudi upload -->
+  <div class="row">
+    <button id="btnToggleUpload" type="button" class="btn">Aggiungi nuovi dati</button>
+  </div>
+  <br>
+
+  <button id="btnToggleSaved" type="button" class="btn">
+    Visualizza dati salvati
+  </button>
+
+  <!-- Contenitore UPLOAD: parte nascosta -->
+  <div id="uploadSection" aria-hidden="true" class="is-hidden">
+    <div class="panel-inner">
+      <section class="card" aria-labelledby="sec-upload-title">
+        <input id="fileInput" type="file" accept=".txt" hidden multiple />
+        <label for="fileInput" class="dropzone"
+               aria-label="Seleziona o trascina uno o più file .TXT e file coordinate_camere.txt">
+          <span class="dropzone-icon" aria-hidden="true">⬆</span>
+          <span class="dropzone-text">
+            Trascina qui i file .TXT o <span class="linklike">sfoglia</span>
+          </span>
+        </label>
+
+        <div class="row">
+          <button id="btnParse" type="button" class="btn">Upload</button>
+          <button id="btnReset" type="button" class="btn">Reset</button>
+        </div>
+
+        <div id="statusBox" aria-live="polite" class="status-area"></div>
+
+        <div id="previewWrap">
+          <table id="previewTable" class="table"></table>
+        </div>
+
+        <div class="geo-bar" id="geoBar">
+          <input id="geoQuery" type="search" placeholder="Cerca indirizzo o luogo (es. Via Roma, Portici)" />
+          <button id="geoSearch" type="button" class="btn">Cerca</button>
+        </div>
+
+        <ul id="geoResults" class="geo-results"></ul>
+
+        <div class="meta-section">
+
+          <div class="meta-group">
+            <div class="meta-legend">Tempo</div>
+
+            <label class="check-inline">
+              <input type="checkbox" id="metaMultiDay" checked>
+              <span>Modalità multi-giorno continua</span>
+            </label>
+            <br>
+
+            <label>
+              <span>Intervallo (minuti)</span>
+              <select id="metaIntervalMin"></select>
+            </label>
+            <br>
+            <label>
+              <span>Ora inizio</span>
+              <input id="metaStart" type="time" placeholder="HH:MM">
+            </label>
+          </div>
+          <br>
+
+          <div class="meta-group">
+            <div class="meta-legend">Coordinate</div>
+
+            <label>
+              <span>Latitudine</span>
+              <input id="metaLat" type="text" placeholder="es. 45.4642">
+            </label>
+
+            <label>
+              <span>Longitudine</span>
+              <input id="metaLon" type="text" placeholder="es. 9.1900">
+            </label>
+
+            <label>
+              <span>Lunghezza tratto (m)</span>
+              <input id="metaPathM" type="number" min="1" step="1" placeholder="es. 200">
+            </label>
+
+            <label>
+              <span>Fuso orario (IANA)</span>
+              <input id="metaTz" type="text" placeholder="es. Europe/Rome">
+            </label>
+          </div>
+          <br>
+
+          <div class="meta-group">
+            <div class="meta-legend">Indirizzo</div>
+
+            <label>
+              <span>Nazione (ISO-2)</span>
+              <input id="metaCountry" type="text" maxlength="2" placeholder="es. IT" style="text-transform:uppercase;">
+            </label>
+
+            <label>
+              <span>Città</span>
+              <input id="metaCity" type="text" placeholder="es. Portici">
+            </label>
+
+            <label>
+              <span>Strada</span>
+              <input id="metaRoad" type="text" placeholder="es. Via Bianchi">
+            </label>
+          </div>
+
+        </div>
+
+        <br>
+        <ul id="fileList" class="file-list"></ul>
+
+        <br><br>
+      </section>
+    </div>
+  </div>
+
+  <section id="savedSection" class="is-hidden">
+    <div class="panel-inner">
+      <section class="card" aria-labelledby="sec-saved-title">
+        <h3 id="sec-saved-title">Dati salvati</h3>
+
+        <div id="dailyPlayerUI" class="is-hidden">
+          <div class="player-card">
+            <div class="player-row row-start">
+              <button data-role="start" class="btn">Visualizza andamento</button>
+            </div>
+
+            <div class="player-row row-main">
+              <button data-role="play"  class="btn btn-secondary" disabled>▶︎ Play</button>
+              <button data-role="speed" class="btn btn-secondary" disabled>⏩ ×1</button>
+            </div>
+
+            <div class="player-row row-days">
+              <button data-role="prev"  class="btn btn-secondary" disabled>← Giorno</button>
+              <button data-role="next"  class="btn btn-secondary" disabled>Giorno →</button>
+            </div>
+
+            <div class="player-row row-meta">
+              <span class="pill pill-day">
+                <span class="pill-label">Giorno</span>
+                <span data-role="day" class="pill-value">YYYY-MM-DD</span>
+              </span>
+              <span class="pill pill-time">
+                <span class="pill-label">Ora</span>
+                <span data-role="now" class="pill-value">--:--</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div id="savedMetricUI" class="metric-ui">
+          <label>Veicolo
+            <select id="vehSel">
+              <option value="total">Tutti</option>
+              <option value="cars">Auto</option>
+              <option value="motos">Moto</option>
+              <option value="buses">Bus</option>
+              <option value="trucks">Veicoli pesanti</option>
+            </select>
+          </label>
+
+          <label>Inquinante
+            <select id="polSel">
+              <option value="">Caricamento...</option>
+            </select>
+          </label>
+        </div>
+        <br>
+
+        <div id="dailyTrendControls" class="metric-ui">
+          <label>
+            <span>Intervallo date</span><br>
+            <div class="row">
+              <input id="savedFrom" type="date" required />
+              <input id="savedTo" type="date" required />
+            </div>
+          </label>
+          <br>
+
+          <label>
+            <span>Cerca luogo</span><br>
+            <div class="geo-bar" id="savedBar">
+              <input id="savedPlace" type="search" placeholder="Cerca qui" />
+              <button id="btnSavedSearch" type="button" class="btn">Cerca</button>
+            </div>
+          </label>
+          <br>
+
+          <label>
+            <span>Giorno singolo</span><br>
+            <input id="savedDate" type="date" required />
+          </label>
+        </div>
+
+        <ul id="savedResults" class="geo-results"></ul>
+        <br><br>
+
+        <small class="muted-text">
+          Le bolle mostrano il valore selezionato (conteggi o inquinante) cumulato nel giorno.
+        </small>
+
+      </section>
+      <br><br>
+    </div>
+  </section>
+
+      <br><br>
+    </div>
+  </section>
+
+</body>
+</html>
