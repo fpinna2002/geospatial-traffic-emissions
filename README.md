@@ -27,6 +27,10 @@ Emission values are model-based estimates derived from traffic counts, emission 
 - Compare vehicle classes and emission-factor categories.
 - Inspect saved data with charts and a daily playback view.
 
+## Demo Video
+
+Watch a recording of the web application for exploring traffic data and estimated vehicle emissions on an interactive map: [View the demo](demo/traffic-emissions-demo.mp4).
+
 ## Architecture and Technologies
 
 - **Frontend:** HTML5, CSS3, and JavaScript ES modules.
